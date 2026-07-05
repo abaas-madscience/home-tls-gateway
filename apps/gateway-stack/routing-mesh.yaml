@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lab-routing-mesh
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/abaas-madscience/home-tls-gateway.git'
+    targetRevision: HEAD
+    path: infrastructure/routing-mesh
+    directory:
+      recurse: true  # Tells Argo to scan nested folders for raw YAMLs
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: routing-mesh
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

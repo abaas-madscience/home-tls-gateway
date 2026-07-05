@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: datakube-wildcard-cert
+  namespace: routing-mesh  # Placed where the Envoy Gateway listener looks for it
+spec:
+  secretName: datakube-org-tls
+  issuerRef:
+    name: letsencrypt-cloudflare-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "datakube.org"
+    - "*.datakube.org"
