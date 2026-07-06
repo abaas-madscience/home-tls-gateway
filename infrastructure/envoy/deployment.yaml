@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: envoy-gateway
-  namespace: envoy-gateway
 spec:
   replicas: 1
   selector:
@@ -14,6 +13,13 @@ spec:
       labels:
         app: envoy
     spec:
+      # Pod-level security settings
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: envoy
         image: envoyproxy/envoy:v1.30-latest
@@ -22,3 +28,10 @@ spec:
           containerPort: 10000
         - name: admin
           containerPort: 9901
+        # Container-level security settings
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: false # Envoy may need write access to /tmp or logs unless configured otherwise
