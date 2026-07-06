@@ -1,17 +1,13 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
+kind: HelmRepository
 metadata:
-  name: envoy-gateway-chart
+  name: envoy-gateway-charts
   namespace: flux-system
 spec:
+  type: "oci"
   interval: 5m
-  url: oci://docker.io/envoyproxy/gateway-helm
-  ref:
-    tag: v1.8.2
-  layerSelector:
-    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
-    operation: copy
+  url: oci://docker.io/envoyproxy
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -23,16 +19,15 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: gateway-helm
+      chart: gateway-helm  
       version: "v1.8.2"
       sourceRef:
-        kind: OCIRepository
+        kind: HelmRepository
         name: envoy-gateway-charts
         namespace: flux-system
-  targetNamespace: envoy-gateway
+  targetNamespace: envoy-gateway-system
   install:
     createNamespace: true
   values:
-    # Since we ran the server-side apply for the CRDs, skip rendering them here
     crds:
-      enabled: true
+      enabled: false
