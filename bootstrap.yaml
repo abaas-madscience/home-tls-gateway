@@ -1,0 +1,24 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: gateway-oss-source
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/abaas-madscience/home-tls-gateway.git
+  ref:
+    branch: main
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-bootstrap
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./infrastructure
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gateway-oss-source
