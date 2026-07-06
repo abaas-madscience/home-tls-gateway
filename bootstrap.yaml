@@ -5,7 +5,7 @@ metadata:
   name: gateway-oss-source
   namespace: flux-system
 spec:
-  interval: 5m
+  interval: 2m
   url: https://github.com/abaas-madscience/home-tls-gateway.git
   ref:
     branch: main
@@ -16,7 +16,7 @@ metadata:
   name: infra-bootstrap
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 5m
   path: ./infrastructure
   prune: true
   sourceRef:
