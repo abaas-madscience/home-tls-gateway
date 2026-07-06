@@ -26,7 +26,8 @@ spec:
         name: envoy-gateway-charts
         namespace: flux-system
   targetNamespace: envoy-gateway
-  createNamespace: true
+  install:
+    createNamespace: true
   values:
     # Since we ran the server-side apply for the CRDs, skip rendering them here
     crds:
