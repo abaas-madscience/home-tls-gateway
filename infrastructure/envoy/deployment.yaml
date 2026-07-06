@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: envoy-gateway
-  namespace: flux-system
+  namespace: envoy-gateway
 spec:
   replicas: 1
   selector:
