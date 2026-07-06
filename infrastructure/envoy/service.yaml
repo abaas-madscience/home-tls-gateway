@@ -5,7 +5,7 @@ metadata:
   name: envoy-service
   namespace: envoy-gateway
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: envoy
   ports:
