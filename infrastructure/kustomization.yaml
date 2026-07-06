@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - flux-system.yaml  # Keeping core component manifests tracked in git
   - envoy
+  - gateway-crds
