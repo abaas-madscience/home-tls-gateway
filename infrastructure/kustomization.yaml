@@ -6,3 +6,4 @@ resources:
   - envoy
   - gateway-crds
   - metallb
+  - cert-manager
