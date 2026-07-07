@@ -1,0 +1,48 @@
+# FILE: infrastructure/routing-mesh/template.yaml.tmpl
+# ----------------------------------------------------
+# TEMPLATE: Copy this directory structure for new apps
+# Target Namespace: routing-mesh
+# ----------------------------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME}-backend
+  namespace: routing-mesh
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: ${APP_NAME}-backend-slice
+  namespace: routing-mesh
+  labels:
+    kubernetes.io/service-name: ${APP_NAME}-backend
+addressType: IPv4
+ports:
+  - name: http
+    port: ${TARGET_PORT} # NodePort or Target Port on the destination cluster
+contains:
+  - addresses:
+      - "${NODE_IP_1}"    # Static IP of Node 1
+      - "${NODE_IP_2}"    # Static IP of Node 2
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ${APP_NAME}-route
+  namespace: routing-mesh
+spec:
+  parentRefs:
+    - name: edge-gateway
+      namespace: routing-mesh
+  hostnames:
+    - "${SUBDOMAIN}.datakube.org"
+  rules:
+    - backendRefs:
+        - name: ${APP_NAME}-backend
+          port: 80

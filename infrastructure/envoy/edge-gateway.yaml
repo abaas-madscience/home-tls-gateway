@@ -19,3 +19,9 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: datakube-org-tls  
+            namespace: routing-mesh
