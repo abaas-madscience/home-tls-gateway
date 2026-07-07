@@ -16,7 +16,7 @@ metadata:
   name: upstream-pve-backend-slice
   namespace: routing-mesh
   labels:
-    kubernetes.io/service-name: upstream-pve-backend
+    kubernetes.io/service-name: upstream-pve-backend-svc
 addressType: IPv4
 ports:
   - name: http
