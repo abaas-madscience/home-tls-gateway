@@ -21,7 +21,7 @@ addressType: IPv4
 ports:
   - name: http
     port: 8006
-contains:
+endpoints:
   - addresses:
       - 192.168.68.2
 ---
