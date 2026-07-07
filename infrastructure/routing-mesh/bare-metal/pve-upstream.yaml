@@ -6,9 +6,9 @@ metadata:
   namespace: routing-mesh
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: 80
+    - name: https # Renamed to explicitly signal the intent
+      port: 443   # The logical routing port for the service
+      targetPort: 8006 # Map logical service port 443 to the physical 8006 backend
 ---
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
@@ -19,11 +19,11 @@ metadata:
     kubernetes.io/service-name: upstream-pve-backend-svc
 addressType: IPv4
 ports:
-  - name: http
+  - name: https
     port: 8006
 endpoints:
   - addresses:
-      - 192.168.68.2
+      - "192.168.68.2"
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -39,4 +39,23 @@ spec:
   rules:
     - backendRefs:
         - name: upstream-pve-backend-svc
-          port: 80
+          port: 443
+---
+# Instruct Envoy to skip upstream certificate validation for the self-signed PVE cert
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: pve-backend-policy
+  namespace: routing-mesh
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: pve-upstream-route
+  upstreamTLS:
+    # Forces Envoy to talk HTTPS to Proxmox
+    protocol: HTTPS
+    # Tells Envoy to accept Proxmox's built-in self-signed cert without validation errors
+    validation:
+      trustOptions:
+        skipVerify: true
