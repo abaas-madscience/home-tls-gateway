@@ -7,3 +7,4 @@ resources:
   - gateway-crds
   - metallb
   - cert-manager
+  - routing-mesh
