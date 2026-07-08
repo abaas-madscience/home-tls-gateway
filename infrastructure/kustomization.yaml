@@ -8,3 +8,4 @@ resources:
   - metallb
   - cert-manager
   - routing-mesh
+  - ns.yaml
