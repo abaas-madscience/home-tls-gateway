@@ -37,3 +37,25 @@ I knew ArgoCD was heavy on resources, but it trashed a MicroK8S cluster with 4cp
 # Update 2
 Flux seems to be more reliable and stable in idle mode. 
 
+# Update 3
+Gateway works fine, certificate is issued and routing works properly
+Next step is a CRD for creating and removing route+endpointslice+service so that I can create something simple
+This is a pseudo example
+
+```yaml
+Kind: TLSGwRoute
+spec:
+    Hostname: test.datakube.org     
+    Protocol: HTTPS
+    destIp: 192.168.68.x 
+    destPort: y
+```    
+    
+It would route https://test.kubekube.org to 192.168.68.x on port y using the structure in infrastructure/routing-mesh/template.yaml.tmpl
+
+We would also need a Go Operator that listens for these new resources and create them
+Removing one from FluxCD repo should then remove the these as well, I tested pruning with a namespace and this works, so I expect it to work with CRDS as well? Not sure.
+
+How i tnow works is 
+MicroK8S cluster -> Cert-manager -> GatewayAPI -> DNS-01 challenge /TLS Gateway -> Route to another cluster/docker/podman service elsewhere in the lab, not specifically on this cluster
+
