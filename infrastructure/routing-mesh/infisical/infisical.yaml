@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infisical-backend-svc
+  namespace: routing-mesh
+spec:
+  ports:
+    - name: https 
+      port: 443   
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: infisical-backend-slice
+  namespace: routing-mesh
+  labels:
+    kubernetes.io/service-name: infisical-backend-svc
+addressType: IPv4
+ports:
+  - name: https
+    port: 8080
+endpoints:
+  - addresses:
+      - "192.168.68.40"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: infisical-upstream-route
+  namespace: routing-mesh
+spec:
+  parentRefs:
+    - name: edge-gateway
+      namespace: routing-mesh
+  hostnames:
+    - "infisical.datakube.org"
+  rules:
+    - backendRefs:
+        - name: infisical-backend-svc
+          port: 8080
