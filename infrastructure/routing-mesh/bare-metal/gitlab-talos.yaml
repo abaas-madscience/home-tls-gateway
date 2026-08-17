@@ -6,8 +6,8 @@ metadata:
   namespace: routing-mesh
 spec:
   ports:
-    - name: https      # Renamed to explicitly signal the intent
-      port: 443        # The logical routing port for the service
+    - name: http       # Renamed to explicitly signal the intent
+      port: 80         # The logical routing port for the service
       targetPort: 80   # Map logical service port 443 to the physical 80 backend
 ---
 apiVersion: discovery.k8s.io/v1
@@ -19,8 +19,8 @@ metadata:
     kubernetes.io/service-name: gitlab-backend-svc
 addressType: IPv4
 ports:
-  - name: https
-    port: 443
+  - name: http
+    port: 80
 endpoints:
   - addresses:
       - "192.168.68.30"
