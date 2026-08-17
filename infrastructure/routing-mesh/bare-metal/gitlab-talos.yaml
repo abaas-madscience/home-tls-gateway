@@ -8,7 +8,7 @@ spec:
   ports:
     - name: https      # Renamed to explicitly signal the intent
       port: 443        # The logical routing port for the service
-      targetPort: 443  # Map logical service port 443 to the physical 8006 backend
+      targetPort: 80   # Map logical service port 443 to the physical 80 backend
 ---
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
@@ -39,4 +39,4 @@ spec:
   rules:
     - backendRefs:
         - name: gitlab-backend-svc
-          port: 443
+          port: 80
